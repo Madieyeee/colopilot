@@ -10,6 +10,7 @@ use App\Models\Incident;
 use App\Models\Attendance;
 use Carbon\Carbon;
 use App\Models\Child;
+use App\Http\Controllers\MonitorReportController;
 
 class DashboardController extends Controller
 {
@@ -34,6 +35,7 @@ class DashboardController extends Controller
                     'absentToday' => Attendance::whereDate('absence_date', Carbon::today())->count(),
                     'incidents' => Incident::with('child')->latest()->take(5)->get(),
                     'attendances' => Attendance::with('child')->latest()->take(5)->get(),
+                    'codeDuJour' => MonitorReportController::getCodeDuJour(),
                 ];
                 break;
 
