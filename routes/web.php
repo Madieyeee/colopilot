@@ -57,6 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('role:administrateur,directeur')->group(function () {
         Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
         Route::get('/rapports', [MonitorReportController::class, 'index'])->name('monitor-report.index');
+        Route::get('/rapports/{report}', [MonitorReportController::class, 'show'])->name('monitor-report.show');
         Route::get('/children', [ChildController::class, 'index'])->name('children.index');
         Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/reports/daily', [ReportController::class, 'generateDailyReport'])->name('reports.daily');

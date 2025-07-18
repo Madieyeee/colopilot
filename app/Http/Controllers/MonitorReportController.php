@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\MonitorReport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class MonitorReportController extends Controller
 {
@@ -14,10 +13,7 @@ class MonitorReportController extends Controller
      */
     public function create()
     {
-        // Récupérer uniquement les utilisateurs avec le rôle 'moniteur'
         $monitors = User::where('role', 'moniteur')->orderBy('name')->get();
-
-        // Passer la liste des moniteurs à la vue
         return view('monitor-report.create', ['monitors' => $monitors]);
     }
 
@@ -26,44 +22,44 @@ class MonitorReportController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Valider le code du jour
-        if ($request->input('code_du_jour') !== self::getCodeDuJour()) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['code_du_jour' => 'Le code du jour est incorrect.']);
-        }
-
-        // 2. Valider le reste des données
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'q1_dispositif' => 'nullable|string|max:2048',
-            'q1_voyage' => 'nullable|string|max:2048',
-            'q2_organisation' => 'nullable|string|max:2048',
-            'q2_ameliorations' => 'nullable|string|max:2048',
-            'q2_repartition_groupes' => 'nullable|string|max:2048',
-            'q2_referents' => 'nullable|string|max:2048',
-            'q2_rythme_activites' => 'nullable|string|max:2048',
-            'q3_relations_moniteurs' => 'nullable|string|max:2048',
-            'q3_relations_enfants' => 'nullable|string|max:2048',
-            'q3_relations_moniteurs_enfants' => 'nullable|string|max:2048',
-            'q4_hebergement' => 'nullable|string|max:2048',
-            'q4_restauration' => 'nullable|string|max:2048',
-            'q5_suggestions' => 'nullable|string',
+            'code_du_jour' => 'required|string',
+            'q1_projet_comprehension' => 'nullable|string',
+            'q1_activites_adequation' => 'nullable|string',
+            'q1_activites_equilibre' => 'nullable|string',
+            'q1_activites_ressources' => 'nullable|string',
+            'q1_activite_top' => 'nullable|string',
+            'q1_activite_flop' => 'nullable|string',
+            'q2_rythme_journee' => 'nullable|string',
+            'q2_enfants_integration' => 'nullable|string',
+            'q2_conflits_gestion' => 'nullable|string',
+            'q2_participation_enfants' => 'nullable|string',
+            'q3_equipe_accueil' => 'nullable|string',
+            'q3_equipe_communication' => 'nullable|string',
+            'q3_equipe_soutien_direction' => 'nullable|string',
+            'q3_equipe_ambiance' => 'nullable|string',
+            'q4_securite_respect' => 'nullable|string',
+            'q4_hygiene_locaux' => 'nullable|string',
+            'q4_restauration_qualite' => 'nullable|string',
+            'q4_logistique_transport' => 'nullable|string',
+            'q5_bilan_personnel' => 'nullable|string',
+            'q5_suggestion_cle' => 'nullable|string',
+            'q5_revenir' => 'nullable|string',
         ]);
 
-        // 3. Vérifier que l'utilisateur est bien un moniteur
-        $monitor = User::find($validatedData['user_id']);
-        if (!$monitor || $monitor->role !== 'moniteur') {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['user_id' => 'L\'utilisateur sélectionné n\'est pas un moniteur valide.']);
+        if ($validated['code_du_jour'] !== self::getCodeDuJour()) {
+            return back()->withErrors(['code_du_jour' => 'Le code du jour est incorrect.'])->withInput();
         }
 
-        // 4. Créer le rapport
-        MonitorReport::create($validatedData);
+        $monitor = User::find($validated['user_id']);
+        if (!$monitor || $monitor->role !== 'moniteur') {
+            return back()->withErrors(['user_id' => 'Utilisateur invalide.'])->withInput();
+        }
 
-        // 5. Rediriger avec un message de succès
-        return redirect()->route('monitor-report.create')->with('success', 'Votre rapport a bien été soumis ! Merci pour votre contribution.');
+        MonitorReport::create($validated);
+
+        return redirect()->route('monitor-report.create')->with('success', 'Votre rapport a été soumis avec succès. Merci pour votre précieuse contribution !');
     }
 
     /**
@@ -71,9 +67,17 @@ class MonitorReportController extends Controller
      */
     public function index()
     {
-        // La logique pour récupérer et afficher tous les rapports viendra ici.
         $reports = MonitorReport::with('user')->latest()->get();
         return view('monitor-report.index', ['reports' => $reports]);
+    }
+
+    /**
+     * Affiche les détails d'un rapport de moniteur spécifique.
+     */
+    public function show(MonitorReport $report)
+    {
+        $report->load('user');
+        return view('monitor-report.show', compact('report'));
     }
 
     /**
@@ -81,12 +85,9 @@ class MonitorReportController extends Controller
      */
     public static function getCodeDuJour()
     {
-        $secretKey = config('app.key'); // Utilise la clé de l'application pour la sécurité
+        $secretKey = config('app.key');
         $date = date('Y-m-d');
-        // Crée un hash, le convertit en nombre et prend les 4 premiers chiffres
         $hash = substr(preg_replace('/[^0-9]/', '', crc32($date . $secretKey)), 0, 4);
-        
-        // S'assure que le code a toujours 4 chiffres, même s'il commence par 0
         return str_pad($hash, 4, '0', STR_PAD_LEFT);
     }
 }
