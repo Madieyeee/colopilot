@@ -9,6 +9,7 @@ use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\MonitorReportController;
 
 // Route publique
 Route::get('/', function () {
@@ -18,6 +19,10 @@ Route::get('/', function () {
 // Routes publiques pour les avis des colons
 Route::get('/avis', [FeedbackController::class, 'create'])->name('feedback.create');
 Route::post('/avis', [FeedbackController::class, 'store'])->name('feedback.store');
+
+// Routes pour les rapports des moniteurs
+Route::get('/rapport', [MonitorReportController::class, 'create'])->name('monitor-report.create');
+Route::post('/rapport', [MonitorReportController::class, 'store'])->name('monitor-report.store');
 
 // Routes nécessitant une authentification
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -51,6 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Routes pour Admin et Directeur uniquement
         Route::middleware('role:administrateur,directeur')->group(function () {
         Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+        Route::get('/rapports', [MonitorReportController::class, 'index'])->name('monitor-report.index');
         Route::get('/children', [ChildController::class, 'index'])->name('children.index');
         Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('/reports/daily', [ReportController::class, 'generateDailyReport'])->name('reports.daily');
