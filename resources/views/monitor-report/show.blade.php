@@ -13,11 +13,11 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-700 dark:text-gray-500 space-y-6">
+                <div class="p-6 text-gray-900 dark:text-gray-500 space-y-6">
 
                     <div class="border-b pb-4 mb-4">
-                        <p class="text-gray-700 dark:text-gray-500"><strong>Moniteur :</strong> {{ $report->user->name }}</p>
-                        <p class="text-gray-700 dark:text-gray-500"><strong>Date de soumission :</strong> {{ $report->created_at->format('d/m/Y à H:i') }}</p>
+                        <p class="text-gray-900 dark:text-gray-300"><strong>Moniteur :</strong> {{ $report->user->name }}</p>
+                        <p class="text-gray-900 dark:text-gray-300"><strong>Date de soumission :</strong> {{ $report->created_at->format('d/m/Y à H:i') }}</p>
                     </div>
 
                     @php
@@ -58,12 +58,12 @@
 
                     @foreach ($sections as $section)
                         <div class="mt-6">
-                            <h3 class="text-lg font-bold text-gray-700 dark:text-gray-500">{{ $section['title'] }}</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-300">{{ $section['title'] }}</h3>
                             <div class="mt-4 space-y-4">
                                 @foreach ($section['questions'] as $field => $question)
                                     <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
                                         <p class="font-semibold">{{ $question }}</p>
-                                        <p class="mt-2 text-gray-700 dark:text-gray-500">{{ $report->$field ?? 'Non renseigné' }}</p>
+                                        <p class="mt-2 text-gray-900 dark:text-gray-300">{{ $report->$field ?? 'Non renseigné' }}</p>
                                     </div>
                                 @endforeach
                             </div>
