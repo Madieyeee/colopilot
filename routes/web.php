@@ -13,7 +13,7 @@ use App\Http\Controllers\MonitorReportController;
 
 // Route publique
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Routes publiques pour les avis des colons
