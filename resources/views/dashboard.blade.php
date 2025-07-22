@@ -141,7 +141,7 @@
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Derniers Incidents</h3>
-                                    <a href="{{ route('incidents.index') }}" class="text-sm text-gray-600 dark:text-white-400 hover:underline">Voir tout</a>
+                                    <a href="{{ route('incidents.index') }}" class="text-sm text-gray-900 dark:text-gray-200 hover:underline">Voir tout</a>
                                 </div>
                                 <div class="space-y-3">
                                     @forelse($incidents as $incident)
@@ -162,7 +162,7 @@
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                                 <div class="flex justify-between items-center mb-4">
                                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Dernières Absences</h3>
-                                    <a href="{{ route('attendances.index') }}" class="text-sm text-gray-600 dark:text-white-400 hover:underline">Voir tout</a>
+                                    <a href="{{ route('attendances.index') }}" class="text-sm text-gray-900 dark:text-gray-200 hover:underline">Voir tout</a>
                                 </div>
                                 <div class="space-y-3">
                                     @forelse($attendances as $attendance)
