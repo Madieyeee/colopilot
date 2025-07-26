@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('child_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // L'utilisateur qui a signalé
-            $table->enum('type', ['médical', 'disciplinaire']);
+            $table->string('type'); // 'médical' ou 'disciplinaire'
             $table->text('description');
             $table->timestamp('incident_date');
             $table->text('follow_up')->nullable(); // Suivi par l'infirmier/directeur
-            $table->enum('status', ['ouvert', 'fermé'])->default('ouvert');
+            $table->string('status')->default('ouvert'); // 'ouvert' ou 'fermé'
             $table->timestamps();
         });
     }

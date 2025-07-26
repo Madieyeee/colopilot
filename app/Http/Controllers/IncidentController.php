@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use App\Models\User;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class IncidentController extends Controller
 {
@@ -54,11 +55,11 @@ class IncidentController extends Controller
             'description' => 'required|string|max:1000',
         ]);
 
-        $incident = Incident::create([
+                $incident = Incident::create([
             'child_id' => $request->child_id,
             'user_id' => Auth::id(),
             'type' => $request->type,
-            'incident_date' => $request->incident_date,
+            'incident_date' => Carbon::parse($request->incident_date)->toDateTimeString(),
             'description' => $request->description,
             'status' => 'ouvert', // Statut par défaut
         ]);
