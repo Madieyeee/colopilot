@@ -66,4 +66,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/programme', [ProgrammeController::class, 'index'])->middleware(['auth'])->name('programme');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
+
+// Route pour la page de contact du développeur
+Route::get('/contact-developpeur', function () {
+    return view('contact-developer');
+})->name('contact.developer');
