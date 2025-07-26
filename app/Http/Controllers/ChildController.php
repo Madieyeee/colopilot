@@ -18,7 +18,7 @@ class ChildController extends Controller
         $childrenQuery = Child::with('group')
             ->leftJoin('groups', 'children.group_id', '=', 'groups.id')
             ->select('children.*') // Important pour éviter les collisions de noms de colonnes
-            ->orderByRaw('ISNULL(groups.name), groups.name ASC') // Trie par groupe, en plaçant les non-assignés à la fin
+            ->orderByRaw('CASE WHEN groups.name IS NULL THEN 1 ELSE 0 END, groups.name ASC') // Trie par groupe, en plaçant les non-assignés à la fin
             ->orderBy('children.last_name', 'asc');
 
         if ($search) {
