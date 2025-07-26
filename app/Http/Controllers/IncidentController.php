@@ -28,9 +28,17 @@ class IncidentController extends Controller
      */
     public function create(): View
     {
-        $monitor = Auth::user();
-        // On s'assure de ne récupérer que les enfants du groupe du moniteur connecté
-        $children = $monitor->group ? $monitor->group->children()->orderBy('last_name')->get() : collect();
+        $user = Auth::user();
+        
+        // Si l'utilisateur est un administrateur ou un directeur, il peut voir tous les enfants.
+        if ($user->role === 'admin' || $user->role === 'directeur') {
+            $children = Child::orderBy('last_name')->get();
+        } 
+        // Sinon, c'est un moniteur, il ne voit que les enfants de son groupe.
+        else {
+            $children = $user->group ? $user->group->children()->orderBy('last_name')->get() : collect();
+        }
+
         return view('incidents.create', compact('children'));
     }
 
