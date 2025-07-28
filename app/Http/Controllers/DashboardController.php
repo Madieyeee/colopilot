@@ -40,11 +40,15 @@ class DashboardController extends Controller
                 break;
 
             case 'moniteur':
-                $user->load('group.children');
                 $group = $user->group;
+                if ($group) {
+                    // On ne charge les enfants que si le groupe existe
+                    $group->load('children');
+                }
+                $children = $group ? $group->children : collect();
                 $data = [
                     'group' => $group,
-                    'children' => $group ? $group->children : collect(),
+                    'children' => $children->isNotEmpty() ? $children->sortBy('last_name') : $children,
                 ];
                 break;
 
