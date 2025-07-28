@@ -73,9 +73,13 @@ class IncidentController extends Controller
                     $twilio = new Client(config('twilio.sid'), config('twilio.token'));
 
                     $child = Child::find($incident->child_id);
-                    $childName = $child ? $child->first_name . ' ' . $child->last_name : 'Enfant inconnu';
+                    $childName = $child ? ($child->first_name . ' ' . $child->last_name) : 'un enfant non identifié';
 
-                                        $message = "[ColoPilot] Alerte incident médical pour : " . $childName . ". Description : " . $incident->description . ". Consultez le tableau de bord.";
+                    $message = sprintf(
+                        "[ColoPilot] Alerte incident médical pour : %s. Description : %s. Consultez le tableau de bord.",
+                        $childName,
+                        $incident->description
+                    );
 
                     $twilio->messages->create(
                         $nurse->phone_number,
